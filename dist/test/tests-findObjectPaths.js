@@ -5,6 +5,16 @@ const fs = require("fs");
 const p = require("path");
 const FindObjectPaths_1 = require("../lib/FindObjectPaths");
 const FindObjectPathsMixin_1 = require("../lib/FindObjectPathsMixin");
+const jsObject = [
+    {
+        prop: undefined,
+        nested: {
+            prop: null,
+            prop2: undefined,
+            prop3: 'string',
+        },
+    },
+];
 describe('Find-Object-Paths Tests', function () {
     let acmeInc = {};
     let rawFileContent;
@@ -32,7 +42,7 @@ describe('Find-Object-Paths Tests', function () {
         const path = (0, FindObjectPaths_1.findObjectPaths)(rawFileContent, { key: 'test' });
         expect(path).toBeUndefined();
     });
-    test('findObjectPaths: path to a single known key', async () => {
+    test('findobjectpaths: path to a single known key', async () => {
         const path = (0, FindObjectPaths_1.findObjectPaths)(acmeInc, { key: 'numberOfActors' });
         expect(path).toEqual('company.numberOfActors');
     });
@@ -205,6 +215,18 @@ describe('Find-Object-Paths Tests', function () {
         expect(allPaths[0]).toEqual('actors[0].playedIn[1].started');
         expect(allPaths[1]).toEqual('actors[2].playedIn[0].started');
         expect(allPaths[2]).toEqual('actors[3].playedIn[1].started');
+    });
+    test('findobjectpaths: path to a single known key', async () => {
+        const path = (0, FindObjectPaths_1.findObjectPaths)(jsObject, { key: 'prop2' });
+        expect(path).toEqual('[0].nested.prop2');
+    });
+    test('findobjectpaths: path to a single known key', async () => {
+        const path = (0, FindObjectPaths_1.findObjectPathsByValue)(jsObject, 'undefined');
+        expect(path).toEqual(undefined);
+    });
+    test('findobjectpaths: path to a single known key', async () => {
+        const path = (0, FindObjectPaths_1.findObjectPathsByKey)(jsObject, 'prop2');
+        expect(path).toEqual('[0].nested.prop2');
     });
 });
 //# sourceMappingURL=tests-findObjectPaths.js.map

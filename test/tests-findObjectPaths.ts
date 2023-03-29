@@ -11,6 +11,17 @@ import {
 } from '../lib/FindObjectPaths';
 import _ from '../lib/FindObjectPathsMixin';
 
+const jsObject = [
+    {
+        prop: undefined,
+        nested: {
+            prop: null,
+            prop2: undefined,
+            prop3: 'string',
+        },
+    },
+];
+
 describe('Find-Object-Paths Tests', function () {
     let acmeInc: any = {};
     let rawFileContent: string;
@@ -43,7 +54,7 @@ describe('Find-Object-Paths Tests', function () {
         expect(path).toBeUndefined();
     });
 
-    test('findObjectPaths: path to a single known key', async () => {
+    test('findobjectpaths: path to a single known key', async () => {
         const path = findObjectPaths(acmeInc, {key: 'numberOfActors'});
         expect(path).toEqual('company.numberOfActors');
     });
@@ -265,5 +276,20 @@ describe('Find-Object-Paths Tests', function () {
         expect(allPaths[0]).toEqual('actors[0].playedIn[1].started');
         expect(allPaths[1]).toEqual('actors[2].playedIn[0].started');
         expect(allPaths[2]).toEqual('actors[3].playedIn[1].started');
+    });
+
+    test('findobjectpaths: path to a single known key', async () => {
+        const path = findObjectPaths(jsObject, {key: 'prop2'});
+        expect(path).toEqual('[0].nested.prop2');
+    });
+
+    test('findobjectpaths: path to a single known key', async () => {
+        const path = findObjectPathsByValue(jsObject, 'undefined');
+        expect(path).toEqual(undefined);
+    });
+
+    test('findobjectpaths: path to a single known key', async () => {
+        const path = findObjectPathsByKey(jsObject, 'prop2');
+        expect(path).toEqual('[0].nested.prop2');
     });
 });
